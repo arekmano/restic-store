@@ -10,9 +10,9 @@ params:
   AWS_ACCESS_KEY_ID: ((restic_access_key_id))
   AWS_SECRET_ACCESS_KEY: ((restic_secret_access_key))
 
-
 inputs:
 - name: input-secret
+
 run:
   path: /usr/bin/restic-secret-store
   args:

@@ -27,6 +27,9 @@ func InitCommand(arguments []string) *ResticCommand {
 }
 
 func (r *ResticCommand) Execute() {
+	logrus.
+	    WithField("arguments", r.arguments).
+	    Info("Executing Command")
     execErr := syscall.Exec(r.binaryPath, r.arguments, r.environment)
     if execErr != nil {
         panic(execErr)
