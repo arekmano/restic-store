@@ -5,6 +5,11 @@ image_resource:
   source:
     repository: arekmano/restic-secret-store
 
+params:
+  RESTIC_PASSWORD: ((restic_password))
+  AWS_ACCESS_KEY_ID: ((restic_access_key_id))
+  AWS_SECRET_ACCESS_KEY: ((restic_secret_access_key))
+
 outputs:
   - name: fetched-secret
 
