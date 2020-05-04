@@ -1,0 +1,17 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: arekmano/restic-secret-store
+
+inputs:
+- name: input-secret
+run:
+  path: /usr/bin/restic-secret-store
+  args:
+  - put
+  - --input-directory
+  - ./input-secret
+  - --secret-name
+  - ((secret_name))

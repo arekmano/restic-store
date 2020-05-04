@@ -1,0 +1,18 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: arekmano/restic-secret-store
+
+outputs:
+  - name: fetched-secret
+
+run:
+  path: /usr/bin/restic-secret-store
+  args:
+  - get
+  - --output-directory
+  - ./fetched-secret
+  - --secret-name
+  - ((secret_name))
