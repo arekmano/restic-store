@@ -12,4 +12,4 @@ RUN wget https://github.com/restic/restic/releases/download/v0.9.6/restic_0.9.6_
 
 COPY ./restic-secret-store /usr/bin/restic-secret-store
 
-ENTRYPOINT [ "/usr/bin/restic-secret-store" ]
+CMD [ "/usr/bin/restic-secret-store" ]
