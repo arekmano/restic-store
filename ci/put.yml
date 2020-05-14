@@ -11,13 +11,13 @@ params:
   AWS_SECRET_ACCESS_KEY: ((restic_secret_access_key))
 
 inputs:
-- name: input-secret
+- name: ((input_directory))
 
 run:
   path: /usr/bin/restic-secret-store
   args:
   - put
   - --input-directory
-  - ./input-secret
+  - ./((input_directory))
   - --secret-name
   - ((secret_name))
