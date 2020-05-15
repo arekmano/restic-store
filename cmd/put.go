@@ -10,7 +10,7 @@ var putCmd = &cobra.Command{
 	Short: "Stores a secret in the secret store",
 	Long: `restic-secret-store builds on top of restic's backup/restore capabilities to retrieve to directories, based off the a given secret name.
 
-	This command works by calling "restic backup" under the hood. Use the "debug" flag to see what the restic command will be.`,
+	This command works by calling "restic backup" under the hood. Use the "dryrun" flag to see what the restic command will be.`,
 	Example: "restic-secret-store put --repository ./encrypted-restic-repo -i ./unencypted-secret -s test-secret",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		s := createStore()
