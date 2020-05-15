@@ -1,18 +1,25 @@
 package cmd
 
-
 import (
 	"github.com/spf13/cobra"
 )
 
-
 var outputDir string
 var getCmd = &cobra.Command{
 	Use:   "get",
-	Short: "fetches a secret from the secret store",
+	Short: "Fetches a secret from the secret store",
+	Long: `restic-secret-store builds on top of restic's backup/restore capabilities to retrieve to directories, based off the a given secret name.
+
+	This command works by calling "restic restore" under the hood. Use the "debug" flag to see what the restic command will be.`,
+	Example: "restic-secret-store get --repository ./encrypted-restic-repo -o ./unencypted-secret -s test-secret",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		s := createStore()
-		s.Get(secretName, outputDir)
+		command := s.Get(secretName, outputDir)
+		if dryRun {
+			command.Print()
+		} else {
+			command.Execute()
+		}
 		return nil
 	},
 }

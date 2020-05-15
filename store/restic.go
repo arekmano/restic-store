@@ -4,44 +4,49 @@ import (
 	"restic-secret-store/exec"
 )
 
+// ResticStore represents a restic secret store.
 type ResticStore struct {
-	repository string
-	isDryRun bool
-	tags []string
-	region string
-	host string
+	Repository string
+	Tags       []string
+	Region     string
+	Host       string
 }
 
+// ResticConfiguration represents all configuration required to create a
+// ResticStore
 type ResticConfiguration struct {
 	Repository string
-	IsDryRun bool
-	Tags []string
-	Region string
-	Host string
+	Tags       []string
+	Region     string
+	Host       string
 }
 
+// NewRestic Creates a ResticStore, based on the given ResticConfiguration
 func NewRestic(config *ResticConfiguration) *ResticStore {
 	return &ResticStore{
-		host: config.Host,
-		isDryRun: config.IsDryRun,
-		region: config.Region,
-		repository: config.Repository,
-		tags: config.Tags,
+		Host:       config.Host,
+		Region:     config.Region,
+		Repository: config.Repository,
+		Tags:       config.Tags,
 	}
 }
 
-func (r *ResticStore) Put(secretName, inputDir string) {
+// Put will insert a secret into the restic repository, by crafting the
+// relevant restic command.
+func (r *ResticStore) Put(secretName, inputDir string) *exec.ResticCommand {
 	args := []string{
 		"restic",
 		"--repo",
-		r.repository,
+		r.Repository,
 		"--host",
-		r.host,
+		r.Host,
 		"--option",
-		"s3.region="+r.region,
+		"s3.region=" + r.Region,
 		"--verbose",
+		"--tag",
+		secretName,
 	}
-	for _, tag := range r.tags {
+	for _, tag := range r.Tags {
 		args = append(args, "--tag", tag)
 	}
 	args = append(
@@ -49,24 +54,20 @@ func (r *ResticStore) Put(secretName, inputDir string) {
 		"backup",
 		inputDir,
 	)
-	command := exec.InitCommand(args)
-	if r.isDryRun {
-		command.Print()
-	} else {
-		command.Execute()
-	}
+	return exec.InitCommand(args)
 }
 
-
-func (r *ResticStore) Get(secretName, destDir string) {
+// Get will retrieve a secret from the restic repository, by crafting the
+// relevant restic command.
+func (r *ResticStore) Get(secretName, destDir string) *exec.ResticCommand {
 	args := []string{
 		"restic",
 		"--repo",
-		r.repository,
+		r.Repository,
 		"--host",
-		r.host,
+		r.Host,
 		"--option",
-		"s3.region="+r.region,
+		"s3.region=" + r.Region,
 		"--verbose",
 		"--tag",
 		secretName,
@@ -78,11 +79,5 @@ func (r *ResticStore) Get(secretName, destDir string) {
 		"--target",
 		destDir,
 	)
-	command := exec.InitCommand(args)
-	if r.isDryRun {
-		command.Print()
-	} else {
-		command.Execute()
-	}
-
+	return exec.InitCommand(args)
 }
