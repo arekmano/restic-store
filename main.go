@@ -1,10 +1,9 @@
 package main
 
 import (
-	"restic-secret-store/cmd"
+	"github.com/arekmano/restic-store/cmd"
 )
-
 
 func main() {
 	cmd.Execute()
-  }
+}

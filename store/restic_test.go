@@ -3,9 +3,10 @@ package store_test
 import (
 	"math/rand"
 	"os"
-	"restic-secret-store/store"
 	"strconv"
 	"testing"
+
+	"github.com/arekmano/restic-store/store"
 
 	"github.com/stretchr/testify/require"
 )

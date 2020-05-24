@@ -1,8 +1,9 @@
 package exec_test
 
 import (
-	"restic-secret-store/exec"
 	"testing"
+
+	"github.com/arekmano/restic-store/exec"
 )
 
 func TestInitCommand(t *testing.T) {

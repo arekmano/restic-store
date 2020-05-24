@@ -3,7 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"restic-secret-store/store"
+
+	"github.com/arekmano/restic-store/store"
 
 	"github.com/spf13/cobra"
 )

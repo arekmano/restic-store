@@ -1,7 +1,7 @@
 package store
 
 import (
-	"restic-secret-store/exec"
+	"github.com/arekmano/restic-store/exec"
 )
 
 // ResticStore represents a restic secret store.
