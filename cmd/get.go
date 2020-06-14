@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -14,11 +17,17 @@ var getCmd = &cobra.Command{
 	Example: "restic-secret-store get --repository ./encrypted-restic-repo -o ./unencypted-secret -s test-secret",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		s := createStore()
-		command := s.Get(secretName, outputDir)
+		options := createOptions()
+		options.Tags = append(options.Tags, secretName)
+		command := s.Get(outputDir, options)
 		if dryRun {
 			command.Print()
 		} else {
-			command.Execute()
+			output, err := command.Execute()
+			if err != nil {
+				logrus.Fatal(err)
+			}
+			fmt.Println(string(output))
 		}
 		return nil
 	},

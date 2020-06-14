@@ -2,8 +2,8 @@ package exec
 
 import (
 	"os"
-	"os/exec"
-	"syscall"
+
+	OSExec "os/exec"
 
 	"github.com/sirupsen/logrus"
 )
@@ -22,7 +22,7 @@ func InitCommand(Arguments []string) *ResticCommand {
 		Environment: os.Environ(),
 		Arguments:   Arguments,
 	}
-	binary, lookErr := exec.LookPath("restic")
+	binary, lookErr := OSExec.LookPath("restic")
 	if lookErr != nil {
 		panic(lookErr)
 	}
@@ -33,14 +33,13 @@ func InitCommand(Arguments []string) *ResticCommand {
 // Execute will execute the ResticCommand. After this command executes,
 // restic-secret-store's process will be replaced with restic's.
 // (i.e. no more restic-secret-store code will execute)
-func (r *ResticCommand) Execute() {
+func (r *ResticCommand) Execute() ([]byte, error) {
 	logrus.
 		WithField("Arguments", r.Arguments).
 		Info("Executing Command")
-	execErr := syscall.Exec(r.BinaryPath, r.Arguments, r.Environment)
-	if execErr != nil {
-		panic(execErr)
-	}
+	command := OSExec.Command(r.BinaryPath, r.Arguments...)
+	out, err := command.CombinedOutput()
+	return out, err
 }
 
 // Print logs the command using the logger. Useful for debugging.
