@@ -2,7 +2,6 @@ package store_test
 
 import (
 	"math/rand"
-	"os"
 	"strconv"
 	"testing"
 
@@ -21,51 +20,60 @@ var randomStore = store.NewRestic(&store.ResticConfiguration{
 	},
 })
 
+var randomOption = store.ResticOptions{
+	Tags: []string{
+		strconv.FormatInt(rand.Int63(), 36),
+		strconv.FormatInt(rand.Int63(), 36),
+	},
+	Options: map[string]string{
+		"s3.region": strconv.FormatInt(rand.Int63(), 36),
+	},
+}
+
 func TestPut(t *testing.T) {
 	// Test Data
 	inputDir := strconv.FormatInt(rand.Int63(), 36)
-	secretName := strconv.FormatInt(rand.Int63(), 36)
-	expectedArgs := []string{"restic",
+	expectedArgs := []string{
 		"--repo",
 		randomStore.Repository,
 		"--host",
 		randomStore.Host,
-		"--option",
-		"s3.region=" + randomStore.Region,
 		"--verbose",
+		"--json",
+		"--option",
+		"s3.region=" + randomOption.Options["s3.region"],
 		"--tag",
-		secretName,
+		randomOption.Tags[0],
 		"--tag",
-		randomStore.Tags[0],
-		"--tag",
-		randomStore.Tags[1],
+		randomOption.Tags[1],
 		"backup",
 		inputDir,
 	}
 
 	// Execute
-	command := randomStore.Put(secretName, inputDir)
+	command := randomStore.Put(inputDir, &randomOption)
 
 	// Verify
 	require.NotNil(t, command.BinaryPath)
-	require.Equal(t, command.Arguments, expectedArgs)
-	require.Equal(t, command.Environment, os.Environ())
+	require.Equal(t, expectedArgs, command.Arguments)
 }
 
 func TestGet(t *testing.T) {
 	// Test Data
 	outputDir := strconv.FormatInt(rand.Int63(), 36)
-	secretName := strconv.FormatInt(rand.Int63(), 36)
-	expectedArgs := []string{"restic",
+	expectedArgs := []string{
 		"--repo",
 		randomStore.Repository,
 		"--host",
 		randomStore.Host,
-		"--option",
-		"s3.region=" + randomStore.Region,
 		"--verbose",
+		"--json",
+		"--option",
+		"s3.region=" + randomOption.Options["s3.region"],
 		"--tag",
-		secretName,
+		randomOption.Tags[0],
+		"--tag",
+		randomOption.Tags[1],
 		"restore",
 		"latest",
 		"--target",
@@ -73,11 +81,9 @@ func TestGet(t *testing.T) {
 	}
 
 	// Execute
-	command := randomStore.Get(secretName, outputDir)
+	command := randomStore.Get(outputDir, &randomOption)
 
 	// Verify
 	require.NotNil(t, command.BinaryPath)
 	require.Equal(t, command.Arguments, expectedArgs)
-	require.Equal(t, command.Environment, os.Environ())
-
 }

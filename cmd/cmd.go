@@ -43,8 +43,13 @@ func Execute() {
 func createStore() *store.ResticStore {
 	return store.NewRestic(&store.ResticConfiguration{
 		Host:       "Restic-Store",
-		Region:     region,
 		Repository: repository,
-		Tags:       []string{secretTag},
 	})
+}
+
+func createOptions() *store.ResticOptions {
+	return &store.ResticOptions{
+		Options: map[string]string{"s3.region": region},
+		Tags:    []string{secretTag},
+	}
 }
