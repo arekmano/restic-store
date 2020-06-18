@@ -85,5 +85,31 @@ func TestGet(t *testing.T) {
 
 	// Verify
 	require.NotNil(t, command.BinaryPath)
-	require.Equal(t, command.Arguments, expectedArgs)
+	require.Equal(t, expectedArgs, command.Arguments)
+}
+
+func TestListSnapshots(t *testing.T) {
+
+	expectedArgs := []string{
+		"--repo",
+		randomStore.Repository,
+		"--host",
+		randomStore.Host,
+		"--verbose",
+		"--json",
+		"--option",
+		"s3.region=" + randomOption.Options["s3.region"],
+		"--tag",
+		randomOption.Tags[0],
+		"--tag",
+		randomOption.Tags[1],
+		"snapshots",
+	}
+
+	// Execute
+	command := randomStore.ListSnapshots(&randomOption)
+
+	// Verify
+	require.NotNil(t, command.BinaryPath)
+	require.Equal(t, expectedArgs, command.Arguments)
 }
