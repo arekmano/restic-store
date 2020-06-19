@@ -60,13 +60,13 @@ func (r *ResticStore) ListSnapshots(options *ResticOptions) *exec.ResticCommand 
 
 // Get will retrieve a secret from the restic repository, by crafting the
 // relevant restic command.
-func (r *ResticStore) Get(destDir string, options *ResticOptions) *exec.ResticCommand {
+func (r *ResticStore) Get(destDir string, options *ResticOptions, snapshotID string) *exec.ResticCommand {
 
 	args := r.prepareArguments(options)
 	args = append(
 		args,
 		"restore",
-		"latest",
+		snapshotID,
 		"--target",
 		destDir,
 	)

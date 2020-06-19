@@ -19,7 +19,7 @@ var getCmd = &cobra.Command{
 		s := createStore()
 		options := createOptions()
 		options.Tags = append(options.Tags, secretName)
-		command := s.Get(outputDir, options)
+		command := s.Get(outputDir, options, "latest")
 		if dryRun {
 			command.Print()
 		} else {

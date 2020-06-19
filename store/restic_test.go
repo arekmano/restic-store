@@ -61,6 +61,8 @@ func TestPut(t *testing.T) {
 func TestGet(t *testing.T) {
 	// Test Data
 	outputDir := strconv.FormatInt(rand.Int63(), 36)
+	snapshotID := strconv.FormatInt(rand.Int63(), 36)
+
 	expectedArgs := []string{
 		"--repo",
 		randomStore.Repository,
@@ -75,13 +77,13 @@ func TestGet(t *testing.T) {
 		"--tag",
 		randomOption.Tags[1],
 		"restore",
-		"latest",
+		snapshotID,
 		"--target",
 		outputDir,
 	}
 
 	// Execute
-	command := randomStore.Get(outputDir, &randomOption)
+	command := randomStore.Get(outputDir, &randomOption, snapshotID)
 
 	// Verify
 	require.NotNil(t, command.BinaryPath)
