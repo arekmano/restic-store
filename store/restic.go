@@ -37,7 +37,7 @@ func NewRestic(config *ResticConfiguration) *ResticStore {
 
 // Put will insert a secret into the restic repository, by crafting the
 // relevant restic command.
-func (r *ResticStore) Put(inputDir string, options *ResticOptions) *exec.ResticCommand {
+func (r *ResticStore) Put(inputDir string, options *ResticOptions) (*exec.ResticCommand, error) {
 	args := r.prepareArguments(options)
 	args = append(
 		args,
@@ -48,7 +48,8 @@ func (r *ResticStore) Put(inputDir string, options *ResticOptions) *exec.ResticC
 	return exec.InitCommand(args)
 }
 
-func (r *ResticStore) ListSnapshots(options *ResticOptions) *exec.ResticCommand {
+// ListSnapshots lists the snapshots found in the restic repository
+func (r *ResticStore) ListSnapshots(options *ResticOptions) (*exec.ResticCommand, error) {
 	args := r.prepareArguments(options)
 	args = append(
 		args,
@@ -60,7 +61,7 @@ func (r *ResticStore) ListSnapshots(options *ResticOptions) *exec.ResticCommand 
 
 // Get will retrieve a secret from the restic repository, by crafting the
 // relevant restic command.
-func (r *ResticStore) Get(destDir string, options *ResticOptions, snapshotID string) *exec.ResticCommand {
+func (r *ResticStore) Get(destDir string, options *ResticOptions, snapshotID string) (*exec.ResticCommand, error) {
 
 	args := r.prepareArguments(options)
 	args = append(
@@ -73,6 +74,7 @@ func (r *ResticStore) Get(destDir string, options *ResticOptions, snapshotID str
 
 	return exec.InitCommand(args)
 }
+
 func (r *ResticStore) prepareArguments(options *ResticOptions) []string {
 	args := []string{
 		"--repo",

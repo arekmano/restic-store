@@ -51,9 +51,10 @@ func TestPut(t *testing.T) {
 	}
 
 	// Execute
-	command := randomStore.Put(inputDir, &randomOption)
+	command, err := randomStore.Put(inputDir, &randomOption)
 
 	// Verify
+	require.NoError(t, err)
 	require.NotNil(t, command.BinaryPath)
 	require.Equal(t, expectedArgs, command.Arguments)
 }
@@ -83,9 +84,10 @@ func TestGet(t *testing.T) {
 	}
 
 	// Execute
-	command := randomStore.Get(outputDir, &randomOption, snapshotID)
+	command, err := randomStore.Get(outputDir, &randomOption, snapshotID)
 
 	// Verify
+	require.NoError(t, err)
 	require.NotNil(t, command.BinaryPath)
 	require.Equal(t, expectedArgs, command.Arguments)
 }
@@ -109,9 +111,10 @@ func TestListSnapshots(t *testing.T) {
 	}
 
 	// Execute
-	command := randomStore.ListSnapshots(&randomOption)
+	command, err := randomStore.ListSnapshots(&randomOption)
 
 	// Verify
+	require.NoError(t, err)
 	require.NotNil(t, command.BinaryPath)
 	require.Equal(t, expectedArgs, command.Arguments)
 }

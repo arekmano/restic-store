@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -20,13 +19,16 @@ var putCmd = &cobra.Command{
 		options := createOptions()
 		options.Tags = append(options.Tags, secretName)
 
-		command := s.Put(inputDir, options)
+		command, err := s.Put(inputDir, options)
+		if err != nil {
+			return err
+		}
 		if dryRun {
 			command.Print()
 		} else {
 			output, err := command.Execute()
 			if err != nil {
-				logrus.Fatal(err)
+				return err
 			}
 			fmt.Println(string(output))
 		}
